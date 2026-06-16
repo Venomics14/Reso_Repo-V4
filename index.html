@@ -1315,9 +1315,8 @@ async function loadLibrary(force = false) {
   resultCount.textContent = 'Loading…';
 
   try {
-    // —— PREVIEW MOCK (no backend needed) ——
-    await new Promise(r => setTimeout(r, 500));
-    const data = { resources: window.__SAMPLE_RESOURCES__ };
+    const res = await fetch(SCRIPT_URL + '?action=getResources');
+    const data = await res.json();
 
     if (!data || !Array.isArray(data.resources)) {
       // Endpoint replied but with no resource list — the script almost certainly
@@ -1626,17 +1625,5 @@ tabButtons.forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.
 loadLibrary();
 </script>
 
-<script>
-window.__SAMPLE_RESOURCES__ = [
-  { name:'Swishy', category:'Assets', subcategory:'Motion Animation', description:'Has AI model to create social animation and also create motion animation from templates in the community.', url:'https://www.swishy.ai/', tags:['#Ai tool','#animation','#asset'], addedBy:'', date:'', rating:'', notes:'' },
-  { name:'Napkin Ai', category:'AI Tools', subcategory:'Design Tool', description:'Create understandable infographics.', url:'https://napkin.ai', tags:['#AI tool','#Infographics','#flow charts'], addedBy:'', date:'', rating:'', notes:'' },
-  { name:'Wiretext', category:'Design', subcategory:'Wire Frame Designer', description:'Figma, but everything is text. Draw the simplest possible wireframe and export as text or markdown.', url:'https://wiretext.app/', tags:['#MCP','#Flow chart','#wire frame'], addedBy:'', date:'', rating:'', notes:'' },
-  { name:'Live Kit', category:'AI Tools', subcategory:'AI voice agent', description:'The platform for voice, video, and physical AI agents. Realtime communication for AI-native apps.', url:'https://cloud.livekit.io', tags:['#Customer service agent','#AI agent builder','#Telephony implementations'], addedBy:'', date:'', rating:'', notes:'' },
-  { name:'Small bits', category:'Assets', subcategory:'Small vectors', description:'A set of 290+ pixelated icons on a limited grid where every point counts.', url:'https://smallbits.design/', tags:['#Vector','#pixelated','#icons'], addedBy:'', date:'', rating:'', notes:'' },
-  { name:'Kit', category:'Productivity', subcategory:'Email Automation', description:'Email marketing for creators — grow your audience, automate sequences, sell digital products.', url:'https://kit.com/', tags:['#Email','#Marketing','#Automation'], addedBy:'', date:'', rating:'', notes:'' },
-  { name:'REVE', category:'Design', subcategory:'AI Imaging Tool', description:'Reimagine reality. Create, edit, and remix images.', url:'https://app.reve.com', tags:['#AI Tool','#Photo generation','#Design','#Editing'], addedBy:'', date:'', rating:'', notes:'' },
-  { name:'Upsplash', category:'Inspiration', subcategory:'Assets', description:'Free high-resolution photos and illustrations.', url:'https://unsplash.com/', tags:['#Assets','#Images','#Inspiration'], addedBy:'', date:'', rating:'', notes:'' }
-];
-</script>
 </body>
 </html>
