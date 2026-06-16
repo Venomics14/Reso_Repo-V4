@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit a Resource · Solaris Studios</title>
+<link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --black: #000000;
+    --red: #FF3B30;
+    --white: #FFFFFF;
+    --warm-grey: #D9D9D9;
+    --glass-bg: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --glass-highlight: rgba(255,255,255,0.18);
+    --input-bg: rgba(255,255,255,0.05);
+    --input-border: rgba(255,255,255,0.15);
+    --input-focus: rgba(255,59,48,0.5);
+    --text-muted: rgba(255,255,255,0.45);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    font-family: 'Satoshi', 'Space Mono', sans-serif;
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── Video Background ── */
+  .video-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .video-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+    filter: saturate(1.2) contrast(1.1);
+  }
+  .video-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,0,0,0.85) 0%, transparent 70%),
+      radial-gradient(ellipse 100% 40% at 50% 0%, rgba(0,0,0,0.7) 0%, transparent 60%),
+      linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+  }
+
+  /* ── Noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  /* ── Page wrapper ── */
+  .page {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 56px 40px 64px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,59,48,0.2);
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+  .header-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Logo mark SVG */
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+  .logo-wordmark {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  h1 {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeUp 0.7s 0.15s ease both;
+  }
+  h1 span { color: var(--red); }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 400;
+    line-height: 1.7;
+    max-width: 480px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  /* ── Main layout ── */
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 52px 24px 100px;
+  }
+
+  /* ── Section label ── */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255,59,48,0.4), transparent);
+  }
+
+  /* ── Liquid Glass Card ── */
+  .form-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.7s ease both;
+    transition: border-color 0.3s;
+  }
+  .form-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .form-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    pointer-events: none;
+  }
+  .form-card:hover {
+    border-color: rgba(255,59,48,0.25);
+  }
+
+  /* ── Field ── */
+  .field { margin-bottom: 28px; position: relative; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    margin-bottom: 10px;
+  }
+  label .req { color: var(--red); margin-left: 3px; }
+  label .hint {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: 8px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  input[type="text"],
+  input[type="url"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 14px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    -webkit-appearance: none;
+    appearance: none;
+    backdrop-filter: blur(8px);
+  }
+  input::placeholder,
+  textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--red);
+    background: rgba(255,59,48,0.06);
+    box-shadow: 0 0 0 3px rgba(255,59,48,0.15), inset 0 1px 0 rgba(255,255,255,0.07);
+  }
+  textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23FF3B30' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 44px;
+    cursor: pointer;
+  }
+  select option { background: #111; color: var(--white); }
+
+  /* ── Hashtag area ── */
+  .hashtag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 500px) { .hashtag-grid { grid-template-columns: 1fr; } }
+
+  .hashtag-input-wrap { position: relative; }
+  .hashtag-input-wrap::before {
+    content: '#';
+    position: absolute;
+    left: 14px;
+    top: 50%; transform: translateY(-50%);
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--red);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hashtag-input-wrap input { padding-left: 30px; }
+
+  .hashtag-tag-preview {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 12px;
+  }
+  .tag-pill {
+    background: rgba(255,59,48,0.12);
+    border: 1px solid rgba(255,59,48,0.3);
+    color: var(--red);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+
+  /* ── Rating ── */
+  .rating-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .rating-opt { display: none; }
+  .rating-opt + label {
+    display: flex; align-items: center; justify-content: center;
+    width: 50px; height: 50px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    backdrop-filter: blur(8px);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--white);
+    font-family: inherit;
+    font-weight: 400;
+  }
+  .rating-opt:checked + label {
+    background: rgba(255,59,48,0.15);
+    border-color: var(--red);
+    box-shadow: 0 0 16px rgba(255,59,48,0.25);
+    transform: scale(1.08);
+  }
+
+  /* ── Submit button ── */
+  .submit-wrap { margin-top: 40px; text-align: center; }
+  button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 0;
+    padding: 18px 52px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 0 0 0 rgba(255,59,48,0);
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  }
+  button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  button[type="submit"]:hover {
+    background: #cc2f26;
+    box-shadow: 0 0 40px rgba(255,59,48,0.5), 0 0 80px rgba(255,59,48,0.2);
+    transform: translateY(-2px);
+  }
+  button[type="submit"]:hover::before { opacity: 1; }
+  button[type="submit"]:active { transform: translateY(0); }
+  .arrow { font-size: 16px; font-style: normal; }
+  button[type="submit"]:disabled {
+    opacity: 0.4; cursor: not-allowed; transform: none;
+    box-shadow: none;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    display: none;
+    position: fixed;
+    top: 28px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    border-radius: 4px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    z-index: 999;
+    white-space: nowrap;
+    animation: slideDown 0.3s ease;
+  }
+  .toast.error { border-color: var(--red); color: var(--red); }
+  .toast.show { display: block; }
+  @keyframes slideDown {
+    from { opacity: 0; top: 10px; }
+    to   { opacity: 1; top: 28px; }
+  }
+
+  /* ── Two-col grid ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── Char counter ── */
+  .field-footer {
+    display: flex; justify-content: space-between;
+    margin-top: 8px;
+  }
+  .char-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .field-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ── Tip row ── */
+  .tip-row {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tip-row::before {
+    content: '//';
+    color: var(--red);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stagger form cards */
+  main .section-label:nth-of-type(1) { animation-delay: 0.2s; }
+  main .form-card:nth-of-type(1) { animation-delay: 0.25s; }
+  main .section-label:nth-of-type(2) { animation-delay: 0.3s; }
+  main .form-card:nth-of-type(2) { animation-delay: 0.35s; }
+  main .section-label:nth-of-type(3) { animation-delay: 0.4s; }
+  main .form-card:nth-of-type(3) { animation-delay: 0.45s; }
+
+  /* ── Decorative scan line ── */
+  .scan-line {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    z-index: 10;
+    animation: scanLine 3s ease-in-out infinite;
+    opacity: 0.6;
+  }
+  @keyframes scanLine {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ── Bottom branding strip ── */
+  .bottom-strip {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red) 50%, transparent);
+    z-index: 10;
+    opacity: 0.4;
+  }
+
+  /* ── Padding for mobile ── */
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 48px; }
+    .form-card { padding: 24px 20px; }
+    h1 { letter-spacing: -0.02em; }
+  }
+
+  /* ── URL duplicate / validation status ── */
+  .url-status {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'Satoshi', sans-serif;
+    line-height: 1.5;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .url-status.checking {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.55);
+  }
+  .url-status.duplicate {
+    display: flex;
+    background: rgba(255,59,48,0.1);
+    border: 1px solid rgba(255,59,48,0.35);
+    color: #ff8a82;
+  }
+  .url-status.valid {
+    display: flex;
+    background: rgba(39,174,96,0.1);
+    border: 1px solid rgba(39,174,96,0.3);
+    color: #5dd68c;
+  }
+  .url-status .icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .url-status strong {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .url-status.duplicate strong { color: var(--red); }
+  .url-status.valid strong { color: #27ae60; }
+  .spinner {
+    width: 13px; height: 13px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-top-color: rgba(255,255,255,0.55);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  input.url-duplicate {
+    border-color: rgba(255,59,48,0.6) !important;
+    background: rgba(255,59,48,0.07) !important;
+    box-shadow: 0 0 0 3px rgba(255,59,48,0.12) !important;
+  }
+  input.url-valid {
+    border-color: rgba(39,174,96,0.5) !important;
+    background: rgba(39,174,96,0.05) !important;
+    box-shadow: 0 0 0 3px rgba(39,174,96,0.1) !important;
+  }
+
+  /* ════════════════════════════════════════════════════════════════════════
+     BROWSE / SEARCH
+     ════════════════════════════════════════════════════════════════════════ */
+
+  /* ── Tab navigation ── */
+  .tab-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+  .tab-btn {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .tab-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.28); }
+  .tab-btn.active {
+    color: var(--white);
+    border-color: var(--red);
+    background: rgba(255,59,48,0.1);
+    box-shadow: 0 0 24px rgba(255,59,48,0.18);
+  }
+  .tab-btn .tab-ic { font-size: 14px; line-height: 1; }
+
+  /* ── Panels ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeUp 0.5s ease both; }
+
+  /* ── Search card (glass, matches form-card) ── */
+  .search-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .search-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    pointer-events: none;
+  }
+
+  /* ── Search bar ── */
+  .search-bar-wrap { position: relative; }
+  .sb-icon {
+    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    width: 17px; height: 17px; color: rgba(255,255,255,0.4);
+    pointer-events: none;
+  }
+  #searchInput { padding-left: 48px; padding-right: 46px; font-size: 15px; }
+  .sb-clear {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    width: 26px; height: 26px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.08);
+    color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1;
+    display: none; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sb-clear:hover { background: rgba(255,59,48,0.2); color: var(--red); }
+  .sb-clear.show { display: flex; }
+
+  /* ── Hashtag filter row ── */
+  .filter-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 24px; margin-bottom: 14px; gap: 12px;
+  }
+  .fh-label {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-grey);
+  }
+  .clear-tags {
+    background: none; border: none; cursor: pointer; padding: 0;
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);
+    transition: color 0.2s; display: none;
+  }
+  .clear-tags:hover { color: var(--red); }
+  .clear-tags.show { display: inline; }
+
+  .tag-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag-filter {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--input-border);
+    color: rgba(255,255,255,0.7);
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    padding: 7px 13px; border-radius: 100px; cursor: pointer;
+    letter-spacing: 0.04em; transition: all 0.18s; backdrop-filter: blur(8px);
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .tag-filter:hover {
+    border-color: rgba(255,59,48,0.4); color: var(--white); transform: translateY(-1px);
+  }
+  .tag-filter .tf-count {
+    font-size: 9px; opacity: 0.6; background: rgba(255,255,255,0.08);
+    padding: 1px 6px; border-radius: 100px;
+  }
+  .tag-filter.active {
+    background: var(--red); border-color: var(--red); color: var(--white);
+    box-shadow: 0 0 18px rgba(255,59,48,0.35);
+  }
+  .tag-filter.active .tf-count { background: rgba(0,0,0,0.25); opacity: 0.9; }
+  .tf-empty { font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+  /* ── Registered-tag suggestions inside the submit form ── */
+  .form-tag-suggest-wrap { margin-top: 20px; }
+  .fts-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 11px;
+  }
+  .fts-head .fh-label {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-grey);
+  }
+  .fts-head .hint-inline {
+    color: var(--text-muted); font-weight: 400; letter-spacing: 0; text-transform: none;
+    font-family: 'Satoshi', sans-serif; font-size: 11px; margin-left: 6px;
+  }
+  .fts-status {
+    font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.05em;
+    color: var(--text-muted); text-transform: uppercase;
+  }
+  .fts-status.warn { color: var(--red); }
+  .form-tag-suggest {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    max-height: 138px; overflow-y: auto; padding: 2px 2px 4px;
+  }
+  .suggest-chip {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--input-border);
+    color: rgba(255,255,255,0.7);
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    padding: 6px 12px; border-radius: 100px; cursor: pointer;
+    letter-spacing: 0.03em; transition: all 0.16s; backdrop-filter: blur(8px);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .suggest-chip:hover {
+    border-color: rgba(255,59,48,0.45); color: var(--white); transform: translateY(-1px);
+  }
+  .suggest-chip .sc-count { font-size: 9px; opacity: 0.55; }
+  .suggest-chip.active {
+    background: var(--red); border-color: var(--red); color: #fff;
+    box-shadow: 0 0 16px rgba(255,59,48,0.3);
+  }
+  .suggest-chip.active .sc-count { opacity: 0.85; }
+
+  /* ── Results header ── */
+  .results-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 28px 4px 18px; gap: 16px;
+  }
+  #resultCount {
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
+  }
+  #resultCount b { color: var(--red); }
+  .sort-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .sort-wrap label { margin: 0; font-size: 9px; }
+  #sortSelect {
+    width: auto; padding: 9px 36px 9px 14px; font-size: 11px;
+    font-family: 'Space Mono', monospace; letter-spacing: 0.05em;
+    border-radius: 8px; background-position: right 13px center;
+  }
+
+  /* ── Results grid ── */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── Resource card ── */
+  .resource-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 22px;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    animation: fadeUp 0.45s ease both;
+  }
+  .resource-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    pointer-events: none;
+  }
+  .resource-card:hover {
+    border-color: rgba(255,59,48,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+  }
+  .rc-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 22px; }
+  .rc-category {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--red);
+    border: 1px solid rgba(255,59,48,0.3); background: rgba(255,59,48,0.08);
+    padding: 4px 10px; border-radius: 100px; white-space: nowrap;
+  }
+  .rc-rating { font-size: 11px; letter-spacing: 2px; color: #ffb340; white-space: nowrap; }
+  .rc-rating .off { color: rgba(255,255,255,0.18); }
+  .rc-name {
+    font-size: 19px; font-weight: 900; line-height: 1.15; letter-spacing: -0.01em;
+    color: var(--white); text-decoration: none;
+    display: inline-flex; align-items: baseline; gap: 7px;
+  }
+  a.rc-name { transition: color 0.2s; }
+  a.rc-name:hover { color: var(--red); }
+  .rc-ext { font-size: 12px; opacity: 0.5; }
+  .rc-sub {
+    font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted);
+    letter-spacing: 0.05em; margin-top: 5px;
+  }
+  .rc-desc { font-size: 13.5px; line-height: 1.6; color: rgba(255,255,255,0.72); }
+  .rc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .rc-tag {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); padding: 3px 9px; border-radius: 100px;
+    cursor: pointer; transition: color 0.18s, border-color 0.18s;
+  }
+  .rc-tag:hover { color: var(--red); border-color: rgba(255,59,48,0.4); }
+  .rc-notes {
+    font-size: 12px; line-height: 1.55; color: var(--text-muted);
+    border-left: 2px solid rgba(255,59,48,0.4); padding-left: 12px; font-style: italic;
+  }
+  .rc-footer {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-top: auto; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .rc-meta { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.03em; }
+  .rc-visit {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--red);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    transition: gap 0.2s; white-space: nowrap;
+  }
+  .rc-visit:hover { gap: 10px; }
+
+  /* ── Browse states (loading / empty / error) ── */
+  .browse-state { padding: 64px 20px; text-align: center; }
+  .browse-state.hidden { display: none; }
+  .bs-icon { font-size: 30px; margin-bottom: 14px; opacity: 0.55; color: var(--red); }
+  .bs-title {
+    font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); margin-bottom: 8px;
+  }
+  .bs-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; max-width: 360px; margin: 0 auto; }
+  .bs-loading {
+    display: inline-flex; align-items: center; gap: 12px; color: var(--text-muted);
+    font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em;
+  }
+  .browse-state .spinner { width: 18px; height: 18px; }
+
+  /* ── Browse responsive ── */
+  @media (max-width: 600px) {
+    .results-grid { grid-template-columns: 1fr; }
+    .search-card { padding: 22px 18px; }
+    .tab-btn { padding: 14px 10px; font-size: 10px; letter-spacing: 0.1em; }
+    .results-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+
+  /* ── Respect reduced-motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Video background -->
+<div class="video-bg">
+  <video autoplay muted loop playsinline preload="auto">
+    <!-- Local copy — used when the .mp4 sits next to this file in your repo -->
+    <source src="Untitled design(1).mp4" type="video/mp4">
+    <!-- Hosted fallback — keeps the background playing even when opened standalone -->
+    <source src="https://venomics14.github.io/Reso_Repo-V3/Untitled%20design(1).mp4" type="video/mp4">
+  </video>
+</div>
+
+<div class="scan-line"></div>
+<div class="bottom-strip"></div>
+
+<div class="page">
+
+  <header>
+    <div class="header-inner">
+      <!-- Solaris Studios Logo -->
+      <div class="logo-wrap">
+        <img class="logo-icon" src="data:image/png;base64,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" alt="Solaris Studios Logo">
+        <span class="logo-wordmark">Solaris Studios</span>
+      </div>
+
+      <div class="eyebrow" id="eyebrow">Knowledge Base · Browse</div>
+      <h1 id="pageTitle">Find a <span>Resource</span></h1>
+      <p class="subtitle" id="pageSubtitle">Search the shared library by keyword or hashtag. Tap a tag to surface everything the team has saved under it.</p>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Tab navigation -->
+    <div class="tab-nav">
+      <button type="button" class="tab-btn active" data-tab="browse"><span class="tab-ic">⌕</span> Browse library</button>
+      <button type="button" class="tab-btn" data-tab="contribute"><span class="tab-ic">＋</span> Add resource</button>
+    </div>
+
+    <!-- ════ BROWSE PANEL ════ -->
+    <div id="browsePanel" class="tab-panel active">
+
+      <div class="section-label">Search the library</div>
+
+      <div class="search-card">
+        <div class="search-bar-wrap">
+          <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
+          <input type="text" id="searchInput" placeholder="Search by name, tool, description or #tag…" autocomplete="off">
+          <button type="button" class="sb-clear" id="sbClear" aria-label="Clear search">×</button>
+        </div>
+
+        <div class="filter-head">
+          <span class="fh-label">Filter by hashtag</span>
+          <button type="button" class="clear-tags" id="clearTags">Clear filters ×</button>
+        </div>
+        <div class="tag-filters" id="tagFilters">
+          <span class="tf-empty">Loading hashtags…</span>
+        </div>
+      </div>
+
+      <div class="results-head">
+        <span id="resultCount">Loading…</span>
+        <div class="sort-wrap">
+          <label for="sortSelect">Sort</label>
+          <select id="sortSelect">
+            <option value="newest">Newest</option>
+            <option value="rating">Top rated</option>
+            <option value="az">A–Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="results-grid" id="resultsGrid"></div>
+
+      <div class="browse-state" id="browseState">
+        <div class="bs-loading"><div class="spinner"></div> Loading the library…</div>
+      </div>
+
+    </div><!-- #browsePanel -->
+
+    <!-- ════ CONTRIBUTE PANEL ════ -->
+    <div id="contributePanel" class="tab-panel">
+    <form id="resourceForm" novalidate>
+
+      <!-- Basic Info -->
+      <div class="section-label">01 · Basic Info</div>
+      <div class="form-card">
+        <div class="field">
+          <label for="name">Resource Name <span class="req">*</span></label>
+          <input type="text" id="name" name="name" placeholder="e.g. Figma, Midjourney, Google Fonts…" required maxlength="80">
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label for="category">Category <span class="req">*</span></label>
+            <select id="category" name="category" required>
+              <option value="" disabled selected>Select…</option>
+              <option>AI Tools</option>
+              <option>Design</option>
+              <option>Typography</option>
+              <option>Assets</option>
+              <option>Productivity</option>
+              <option>Strategy &amp; Research</option>
+              <option>Inspiration</option>
+              <option>Techniques</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="subcategory">Sub-Category <span class="hint">optional</span></label>
+            <input type="text" id="subcategory" name="subcategory" placeholder="e.g. Image Gen, UI/UX…">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="description">Description <span class="req">*</span></label>
+          <textarea id="description" name="description" placeholder="1–2 sentences: what is it and why is it useful for our team?" required maxlength="500"></textarea>
+          <div class="field-footer">
+            <span class="field-note">Be specific — help team mates decide in 10 seconds.</span>
+            <span class="char-count" id="descCount">0 / 500</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="url">Link / URL <span class="req">*</span></label>
+          <input type="url" id="url" name="url" placeholder="https://…" required>
+          <div class="url-status" id="urlStatus"></div>
+        </div>
+      </div>
+
+      <!-- Hashtags -->
+      <div class="section-label">02 · Hashtags <span style="color:var(--text-muted);font-style:normal;letter-spacing:0;text-transform:none;font-size:10px;font-family:'Satoshi',sans-serif;font-weight:400;margin-left:4px">minimum 3</span></div>
+      <div class="form-card">
+        <div class="field" style="margin-bottom:16px">
+          <label>Add 3–5 Hashtags <span class="req">*</span> <span class="hint">No # needed</span></label>
+          <div class="hashtag-grid">
+            <div class="hashtag-input-wrap">
+              <input type="text" id="tag1" name="tag1" placeholder="AITools" maxlength="30" class="tag-input" required>
+            </div>
+            <div class="hashtag-input-wrap">
+              <input type="text" id="tag2" name="tag2" placeholder="BrandIdentity" maxlength="30" class="tag-input" required>
+            </div>
+            <div class="hashtag-input-wrap">
+              <input type="text" id="tag3" name="tag3" placeholder="Design" maxlength="30" class="tag-input" required>
+            </div>
+            <div class="hashtag-input-wrap">
+              <input type="text" id="tag4" name="tag4" placeholder="Optional 4th" maxlength="30" class="tag-input">
+            </div>
+            <div class="hashtag-input-wrap">
+              <input type="text" id="tag5" name="tag5" placeholder="Optional 5th" maxlength="30" class="tag-input">
+            </div>
+          </div>
+        </div>
+        <div class="form-tag-suggest-wrap">
+          <div class="fts-head">
+            <span class="fh-label">Registered tags <span class="hint-inline">tap to reuse — keeps tags consistent</span></span>
+            <span class="fts-status" id="ftsStatus"></span>
+          </div>
+          <div class="form-tag-suggest" id="formTagSuggest">
+            <span class="tf-empty">Loading registered tags…</span>
+          </div>
+        </div>
+        <div class="hashtag-tag-preview" id="tagPreview"></div>
+        <p class="tip-row">Reference the Hashtag Index sheet for approved tags, or propose a new one.</p>
+      </div>
+
+      <!-- Your Details -->
+      <div class="section-label">03 · Your Details</div>
+      <div class="form-card">
+        <div class="two-col">
+          <div class="field">
+            <label for="contributor">Your Name <span class="req">*</span></label>
+            <input type="text" id="contributor" name="contributor" placeholder="First name + last initial" required maxlength="40">
+          </div>
+          <div class="field">
+            <label>Rating <span class="req">*</span> <span class="hint">How useful?</span></label>
+            <div class="rating-group">
+              <input type="radio" name="rating" id="r1" value="1" class="rating-opt"><label for="r1">⭐</label>
+              <input type="radio" name="rating" id="r2" value="2" class="rating-opt"><label for="r2">2⭐</label>
+              <input type="radio" name="rating" id="r3" value="3" class="rating-opt"><label for="r3">3⭐</label>
+              <input type="radio" name="rating" id="r4" value="4" class="rating-opt"><label for="r4">4⭐</label>
+              <input type="radio" name="rating" id="r5" value="5" class="rating-opt"><label for="r5">5⭐</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:0">
+          <label for="notes">Notes / Tips <span class="hint">optional</span></label>
+          <textarea id="notes" name="notes" placeholder="Any tips, caveats or workflow advice for team mates?" style="min-height:80px" maxlength="400"></textarea>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button type="submit" id="submitBtn">
+          Add to Library <span class="arrow">→</span>
+        </button>
+      </div>
+
+    </form>
+    </div><!-- #contributePanel -->
+  </main>
+
+</div><!-- .page -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqVcKdPIeROK9fqh_gWYchJgSKxo5zcyAtEEeumJmB4sdCP1CSWfcsszQmv0LIoEUC/exec';
+
+// ── Keep the background video playing (muted autoplay can stall) ───────────────
+(function () {
+  const v = document.querySelector('.video-bg video');
+  if (!v) return;
+  const go = () => { const p = v.play(); if (p) p.catch(() => {}); };
+  go();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) go(); });
+  ['click', 'touchstart', 'keydown'].forEach((evt) =>
+    window.addEventListener(evt, go, { once: true, passive: true }));
+})();
+
+// ── Hashtag preview ───────────────────────────────────────────────────────────
+const tagInputs = document.querySelectorAll('.tag-input');
+const tagPreview = document.getElementById('tagPreview');
+
+function updateTagPreview() {
+  tagPreview.innerHTML = '';
+  
+  tagInputs.forEach(input => {
+    let val = input.value.replace(/^#+/, '').trim();
+    if (val) {
+      const pill = document.createElement('span');
+      pill.className = 'tag-pill';
+      pill.textContent = '#' + val;
+      tagPreview.appendChild(pill);
+    }
+  });
+}
+tagInputs.forEach(input => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/^#+/, '');
+    updateTagPreview();
+    if (typeof syncFormChips === 'function') syncFormChips();
+  });
+});
+
+// ── Char counter ──────────────────────────────────────────────────────────────
+const desc = document.getElementById('description');
+const descCount = document.getElementById('descCount');
+desc.addEventListener('input', () => {
+  descCount.textContent = `${desc.value.length} / 500`;
+});
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 4500);
+}
+
+// ── URL duplicate checker ─────────────────────────────────────────────────────
+const urlInput = document.getElementById('url');
+const urlStatus = document.getElementById('urlStatus');
+let urlCheckTimer = null;
+let lastCheckedUrl = '';
+let urlIsDuplicate = false;
+
+function setUrlStatus(type, html) {
+  urlStatus.className = 'url-status ' + type;
+  urlStatus.innerHTML = html;
+}
+function clearUrlStatus() {
+  urlStatus.className = 'url-status';
+  urlStatus.innerHTML = '';
+  urlInput.classList.remove('url-duplicate', 'url-valid');
+  urlIsDuplicate = false;
+}
+
+async function checkUrlDuplicate(url) {
+  const normalised = url.trim().replace(/\/$/, '').toLowerCase();
+  if (normalised === lastCheckedUrl) return;
+  lastCheckedUrl = normalised;
+
+  setUrlStatus('checking', '<div class="spinner"></div> Checking library for duplicates…');
+  urlInput.classList.remove('url-duplicate', 'url-valid');
+  urlIsDuplicate = false;
+
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=checkUrl&url=' + encodeURIComponent(normalised));
+    const data = await res.json();
+
+    if (data.duplicate) {
+      urlIsDuplicate = true;
+      urlInput.classList.add('url-duplicate');
+      setUrlStatus('duplicate',
+        `<span class="icon">⚠️</span>
+         <div>
+           <strong>Already in the library</strong>
+           Submitted by <strong>${data.addedBy || 'a team mate'}</strong>
+           on ${data.date || 'an earlier date'}
+           ${data.name ? '— <em>' + data.name + '</em>' : ''}.
+           Please avoid duplicates.
+         </div>`
+      );
+    } else {
+      urlIsDuplicate = false;
+      urlInput.classList.add('url-valid');
+      setUrlStatus('valid',
+        '<span class="icon">✓</span><div><strong>URL is unique</strong>This resource hasn\'t been submitted before.</div>'
+      );
+    }
+  } catch (err) {
+    clearUrlStatus(); // Silently fail — don't block on network error
+  }
+}
+
+urlInput.addEventListener('input', () => {
+  clearUrlStatus();
+  clearTimeout(urlCheckTimer);
+  const val = urlInput.value.trim();
+  if (val.startsWith('http') && val.length > 10) {
+    urlCheckTimer = setTimeout(() => checkUrlDuplicate(val), 800);
+  }
+});
+urlInput.addEventListener('blur', () => {
+  clearTimeout(urlCheckTimer);
+  const val = urlInput.value.trim();
+  if (val.startsWith('http') && val.length > 10) checkUrlDuplicate(val);
+});
+
+// ── Form submit ───────────────────────────────────────────────────────────────
+document.getElementById('resourceForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const btn = document.getElementById('submitBtn');
+
+  const name = form.name.value.trim();
+  const category = form.category.value;
+  const description = form.description.value.trim();
+  const contributor = form.contributor.value.trim();
+  const rating = form.querySelector('input[name="rating"]:checked')?.value;
+  let url = form.url.value.trim();
+  const tag1 = form.tag1.value.replace(/^#+/, '').trim();
+  const tag2 = form.tag2.value.replace(/^#+/, '').trim();
+  const tag3 = form.tag3.value.replace(/^#+/, '').trim();
+
+  if (!name || !category || !description || !contributor || !rating) {
+    showToast('Fill in all required fields', true); return;
+  }
+  if (!url) {
+    showToast('Add a link / URL — it’s required', true);
+    form.url.focus();
+    return;
+  }
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url; // forgive a missing scheme
+  try { new URL(url); } catch (_) {
+    showToast('That doesn’t look like a valid URL', true);
+    form.url.focus();
+    return;
+  }
+  if (!tag1 || !tag2 || !tag3) {
+    showToast('Add at least 3 hashtags', true); return;
+  }
+  if (urlIsDuplicate) {
+    showToast('This resource already exists in the library', true); return;
+  }
+
+  const payload = {
+    name, category,
+    subcategory: form.subcategory.value.trim(),
+    description,
+    url,
+    tag1: '#' + tag1, tag2: '#' + tag2, tag3: '#' + tag3,
+    tag4: form.tag4.value.replace(/^#+/, '').trim() ? '#' + form.tag4.value.replace(/^#+/, '').trim() : '',
+    tag5: form.tag5.value.replace(/^#+/, '').trim() ? '#' + form.tag5.value.replace(/^#+/, '').trim() : '',
+    contributor,
+    date: new Date().toISOString().split('T')[0],
+    rating,
+    notes: form.notes.value.trim()
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    showToast('✓ Resource added to the library');
+    form.reset();
+    tagPreview.innerHTML = '';
+    if (typeof syncFormChips === 'function') syncFormChips();
+    descCount.textContent = '0 / 500';
+    clearUrlStatus();
+    lastCheckedUrl = '';
+    libraryStale = true; // Browse will refetch next time it's opened
+  } catch (err) {
+    showToast('Something went wrong — try again', true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Add to Library <span class="arrow">→</span>';
+  }
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+//  BROWSE / SEARCH — pulls the library from the sheet and renders cards
+// ════════════════════════════════════════════════════════════════════════════
+const browseState  = document.getElementById('browseState');
+const resultsGrid  = document.getElementById('resultsGrid');
+const tagFilters   = document.getElementById('tagFilters');
+const resultCount  = document.getElementById('resultCount');
+const searchInput  = document.getElementById('searchInput');
+const sbClear      = document.getElementById('sbClear');
+const clearTagsBtn = document.getElementById('clearTags');
+const sortSelect   = document.getElementById('sortSelect');
+const formTagSuggest = document.getElementById('formTagSuggest');
+const ftsStatus      = document.getElementById('ftsStatus');
+
+let allResources  = [];
+let activeTags    = new Set();   // lower-cased tags (no #) currently selected
+let libraryLoaded = false;
+let libraryStale  = false;
+
+const norm      = (s) => (s || '').toString().trim().toLowerCase();
+const stripHash = (s) => norm(s).replace(/^#+/, '');
+
+function escapeHtml(s) {
+  return (s || '').toString()
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function setBrowseState(html) {
+  if (html === null) { browseState.classList.add('hidden'); browseState.innerHTML = ''; return; }
+  browseState.classList.remove('hidden');
+  browseState.innerHTML = html;
+}
+
+async function loadLibrary(force = false) {
+  if (libraryLoaded && !force && !libraryStale) return;
+
+  setBrowseState('<div class="bs-loading"><div class="spinner"></div> Loading the library…</div>');
+  resultsGrid.innerHTML = '';
+  resultCount.textContent = 'Loading…';
+
+  try {
+    // —— PREVIEW MOCK (no backend needed) ——
+    await new Promise(r => setTimeout(r, 500));
+    const data = { resources: window.__SAMPLE_RESOURCES__ };
+
+    if (!data || !Array.isArray(data.resources)) {
+      // Endpoint replied but with no resource list — the script almost certainly
+      // needs re-deploying so the getResources endpoint goes live.
+      libraryLoaded = true;
+      allResources = [];
+      buildTagCloud();
+      buildFormTagSuggestions();
+      resultCount.textContent = '';
+      setBrowseState(
+        '<div class="bs-icon">⟳</div>' +
+        '<div class="bs-title">Endpoint not live yet</div>' +
+        '<div class="bs-text">The script responded but returned no resources. Re-deploy the Apps Script: Deploy → Manage deployments → edit → New version, then reload this page.</div>'
+      );
+      return;
+    }
+
+    allResources  = data.resources;
+    libraryLoaded = true;
+    libraryStale  = false;
+    buildTagCloud();
+    buildFormTagSuggestions();
+    applyFilters();
+  } catch (err) {
+    resultCount.textContent = '';
+    setBrowseState(
+      '<div class="bs-icon">⚠</div>' +
+      '<div class="bs-title">Could not reach the library</div>' +
+      '<div class="bs-text">Check your connection and try again. If this keeps happening, re-deploy the Apps Script with the getResources endpoint.</div>'
+    );
+  }
+}
+
+// Collapse all tags across the library into a unique, de-duplicated list.
+// Messy casings (#Ai tool / #AI Tool) merge into one entry; the canonical
+// label shown is whichever casing the team uses most often.
+function uniqueTags() {
+  const map = new Map(); // key → { labels: Map(label→n), total }
+  allResources.forEach((r) => {
+    (r.tags || []).forEach((t) => {
+      const key = stripHash(t);
+      if (!key) return;
+      const label = '#' + t.replace(/^#+/, '').trim();
+      if (!map.has(key)) map.set(key, { labels: new Map(), total: 0 });
+      const e = map.get(key);
+      e.total++;
+      e.labels.set(label, (e.labels.get(label) || 0) + 1);
+    });
+  });
+
+  const out = [];
+  for (const [key, e] of map) {
+    let best = key, bestN = -1;
+    for (const [lab, n] of e.labels) if (n > bestN) { best = lab; bestN = n; }
+    out.push({ key, label: best, count: e.total });
+  }
+  out.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  return out;
+}
+
+function buildTagCloud() {
+  const tags = uniqueTags();
+  if (!tags.length) {
+    tagFilters.innerHTML = '<span class="tf-empty">No hashtags yet — add a resource to create the first.</span>';
+    return;
+  }
+  tagFilters.innerHTML = '';
+  tags.forEach(({ key, label, count }) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tag-filter' + (activeTags.has(key) ? ' active' : '');
+    btn.dataset.tag = key;
+    btn.innerHTML = `${escapeHtml(label)}<span class="tf-count">${count}</span>`;
+    btn.addEventListener('click', () => toggleTag(key));
+    tagFilters.appendChild(btn);
+  });
+}
+
+// ── Registered-tag chips inside the submit form ───────────────────────────────
+function setFtsStatus(msg, warn = false) {
+  if (!ftsStatus) return;
+  ftsStatus.textContent = msg;
+  ftsStatus.className = 'fts-status' + (warn ? ' warn' : '');
+}
+
+function buildFormTagSuggestions() {
+  if (!formTagSuggest) return;
+  const tags = uniqueTags();
+  if (!tags.length) {
+    formTagSuggest.innerHTML = '<span class="tf-empty">No registered tags yet — type your own below.</span>';
+    return;
+  }
+  formTagSuggest.innerHTML = '';
+  tags.forEach(({ key, label, count }) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'suggest-chip';
+    chip.dataset.key = key;
+    chip.dataset.label = label.replace(/^#+/, '');
+    chip.innerHTML = `${escapeHtml(label)}<span class="sc-count">${count}</span>`;
+    chip.addEventListener('click', () => addOrToggleFormTag(chip));
+    formTagSuggest.appendChild(chip);
+  });
+  syncFormChips();
+}
+
+function addOrToggleFormTag(chip) {
+  const key = chip.dataset.key;
+  const label = chip.dataset.label; // already without '#'
+  const inputs = [...document.querySelectorAll('.tag-input')];
+
+  const existing = inputs.find((inp) => stripHash(inp.value) === key);
+  if (existing) {
+    existing.value = ''; // tap again to remove
+  } else {
+    const empty = inputs.find((inp) => !inp.value.trim());
+    if (!empty) { setFtsStatus('All 5 tag slots full', true); return; }
+    empty.value = label;
+  }
+  if (typeof updateTagPreview === 'function') updateTagPreview();
+  syncFormChips();
+}
+
+function syncFormChips() {
+  if (!formTagSuggest) return;
+  const inputs = [...document.querySelectorAll('.tag-input')];
+  const current = new Set(inputs.map((inp) => stripHash(inp.value)).filter(Boolean));
+  formTagSuggest.querySelectorAll('.suggest-chip').forEach((chip) =>
+    chip.classList.toggle('active', current.has(chip.dataset.key))
+  );
+  const filled = inputs.filter((inp) => inp.value.trim()).length;
+  setFtsStatus(filled >= 5 ? 'All 5 tag slots full' : '', filled >= 5);
+}
+
+function syncTagButtons() {
+  tagFilters.querySelectorAll('.tag-filter').forEach((b) =>
+    b.classList.toggle('active', activeTags.has(b.dataset.tag))
+  );
+  clearTagsBtn.classList.toggle('show', activeTags.size > 0);
+}
+
+function toggleTag(key) {
+  activeTags.has(key) ? activeTags.delete(key) : activeTags.add(key);
+  syncTagButtons();
+  applyFilters();
+}
+
+function ratingStars(rating) {
+  const n = Math.max(0, Math.min(5, parseInt(rating, 10) || 0));
+  if (!n) return '';
+  return '★'.repeat(n) + `<span class="off">${'★'.repeat(5 - n)}</span>`;
+}
+
+function matchesFilters(r) {
+  // Hashtag filter — OR across selected tags
+  if (activeTags.size) {
+    const rTags = (r.tags || []).map(stripHash);
+    if (![...activeTags].some((t) => rTags.includes(t))) return false;
+  }
+  // Free-text search — AND with the tag filter
+  const q = norm(searchInput.value);
+  if (q) {
+    const hay = [r.name, r.category, r.subcategory, r.description, r.addedBy, r.notes]
+      .concat(r.tags || [])
+      .map(norm).join(' ');
+    if (!hay.includes(q) && !hay.includes(q.replace(/^#+/, ''))) return false;
+  }
+  return true;
+}
+
+function sortResources(list) {
+  const arr = [...list];
+  if (sortSelect.value === 'rating') {
+    arr.sort((a, b) => (parseInt(b.rating, 10) || 0) - (parseInt(a.rating, 10) || 0));
+  } else if (sortSelect.value === 'az') {
+    arr.sort((a, b) => norm(a.name).localeCompare(norm(b.name)));
+  }
+  return arr; // 'newest' keeps server order (already newest-first)
+}
+
+function renderCard(r) {
+  const cat  = r.category ? `<span class="rc-category">${escapeHtml(r.category)}</span>` : '<span></span>';
+  const stars = `<span class="rc-rating">${ratingStars(r.rating)}</span>`;
+  const nameInner = `${escapeHtml(r.name)}${r.url ? '<span class="rc-ext">↗</span>' : ''}`;
+  const name = r.url
+    ? `<a class="rc-name" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">${nameInner}</a>`
+    : `<span class="rc-name">${escapeHtml(r.name)}</span>`;
+  const sub  = r.subcategory ? `<div class="rc-sub">${escapeHtml(r.subcategory)}</div>` : '';
+  const tags = (r.tags || []).map((t) => {
+    const key = stripHash(t);
+    return `<span class="rc-tag" data-tag="${escapeHtml(key)}">${escapeHtml('#' + t.replace(/^#+/, ''))}</span>`;
+  }).join('');
+  const notes  = r.notes ? `<div class="rc-notes">${escapeHtml(r.notes)}</div>` : '';
+  const meta   = [r.addedBy ? 'by ' + escapeHtml(r.addedBy) : '', escapeHtml(r.date)].filter(Boolean).join(' · ');
+  const visit  = r.url
+    ? `<a class="rc-visit" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">Visit →</a>`
+    : '';
+
+  return `
+    <article class="resource-card">
+      <div class="rc-top">${cat}${stars}</div>
+      <div>${name}${sub}</div>
+      ${r.description ? `<p class="rc-desc">${escapeHtml(r.description)}</p>` : ''}
+      ${tags ? `<div class="rc-tags">${tags}</div>` : ''}
+      ${notes}
+      <div class="rc-footer"><span class="rc-meta">${meta}</span>${visit}</div>
+    </article>`;
+}
+
+function applyFilters() {
+  if (!libraryLoaded) return;
+
+  const total    = allResources.length;
+  const filtered = sortResources(allResources.filter(matchesFilters));
+
+  resultCount.innerHTML = (filtered.length === total)
+    ? `<b>${total}</b> resource${total === 1 ? '' : 's'} in the library`
+    : `<b>${filtered.length}</b> of ${total} resource${total === 1 ? '' : 's'}`;
+
+  if (!total) {
+    resultsGrid.innerHTML = '';
+    setBrowseState(
+      '<div class="bs-icon">✦</div>' +
+      '<div class="bs-title">The library is empty</div>' +
+      '<div class="bs-text">Nothing has been added yet. Switch to “Add resource” to submit the first one.</div>'
+    );
+    return;
+  }
+  if (!filtered.length) {
+    resultsGrid.innerHTML = '';
+    setBrowseState(
+      '<div class="bs-icon">∅</div>' +
+      '<div class="bs-title">No matches</div>' +
+      '<div class="bs-text">Nothing fits those filters. Try clearing a hashtag or searching a different term.</div>'
+    );
+    return;
+  }
+
+  setBrowseState(null);
+  resultsGrid.innerHTML = filtered.map(renderCard).join('');
+
+  // Clickable tag pills inside cards add to the active filter set
+  resultsGrid.querySelectorAll('.rc-tag').forEach((el) => {
+    el.addEventListener('click', () => {
+      activeTags.add(el.dataset.tag);
+      syncTagButtons();
+      applyFilters();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+}
+
+// ── Search + control events ───────────────────────────────────────────────────
+let searchTimer = null;
+searchInput.addEventListener('input', () => {
+  sbClear.classList.toggle('show', searchInput.value.length > 0);
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(applyFilters, 160);
+});
+sbClear.addEventListener('click', () => {
+  searchInput.value = '';
+  sbClear.classList.remove('show');
+  applyFilters();
+  searchInput.focus();
+});
+clearTagsBtn.addEventListener('click', () => {
+  activeTags.clear();
+  syncTagButtons();
+  applyFilters();
+});
+sortSelect.addEventListener('change', applyFilters);
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+const tabButtons = document.querySelectorAll('.tab-btn');
+const panels = {
+  browse:     document.getElementById('browsePanel'),
+  contribute: document.getElementById('contributePanel'),
+};
+const headerCopy = {
+  browse: {
+    eyebrow:  'Knowledge Base · Browse',
+    title:    'Find a <span>Resource</span>',
+    subtitle: 'Search the shared library by keyword or hashtag. Tap a tag to surface everything the team has saved under it.',
+  },
+  contribute: {
+    eyebrow:  'Knowledge Base · Resource Submission',
+    title:    'Share a <span>Resource</span>',
+    subtitle: 'Add tools, techniques, fonts, AI or ideas to our shared library. Include 3–5 hashtags so team mates can find it fast.',
+  },
+};
+
+function switchTab(tab) {
+  tabButtons.forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  Object.entries(panels).forEach(([k, el]) => el.classList.toggle('active', k === tab));
+
+  const c = headerCopy[tab];
+  document.getElementById('eyebrow').textContent   = c.eyebrow;
+  document.getElementById('pageTitle').innerHTML   = c.title;
+  document.getElementById('pageSubtitle').textContent = c.subtitle;
+
+  if (tab === 'browse') loadLibrary();
+}
+tabButtons.forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+// Initial load — Browse is the default tab
+loadLibrary();
+</script>
+
+<script>
+window.__SAMPLE_RESOURCES__ = [
+  { name:'Swishy', category:'Assets', subcategory:'Motion Animation', description:'Has AI model to create social animation and also create motion animation from templates in the community.', url:'https://www.swishy.ai/', tags:['#Ai tool','#animation','#asset'], addedBy:'', date:'', rating:'', notes:'' },
+  { name:'Napkin Ai', category:'AI Tools', subcategory:'Design Tool', description:'Create understandable infographics.', url:'https://napkin.ai', tags:['#AI tool','#Infographics','#flow charts'], addedBy:'', date:'', rating:'', notes:'' },
+  { name:'Wiretext', category:'Design', subcategory:'Wire Frame Designer', description:'Figma, but everything is text. Draw the simplest possible wireframe and export as text or markdown.', url:'https://wiretext.app/', tags:['#MCP','#Flow chart','#wire frame'], addedBy:'', date:'', rating:'', notes:'' },
+  { name:'Live Kit', category:'AI Tools', subcategory:'AI voice agent', description:'The platform for voice, video, and physical AI agents. Realtime communication for AI-native apps.', url:'https://cloud.livekit.io', tags:['#Customer service agent','#AI agent builder','#Telephony implementations'], addedBy:'', date:'', rating:'', notes:'' },
+  { name:'Small bits', category:'Assets', subcategory:'Small vectors', description:'A set of 290+ pixelated icons on a limited grid where every point counts.', url:'https://smallbits.design/', tags:['#Vector','#pixelated','#icons'], addedBy:'', date:'', rating:'', notes:'' },
+  { name:'Kit', category:'Productivity', subcategory:'Email Automation', description:'Email marketing for creators — grow your audience, automate sequences, sell digital products.', url:'https://kit.com/', tags:['#Email','#Marketing','#Automation'], addedBy:'', date:'', rating:'', notes:'' },
+  { name:'REVE', category:'Design', subcategory:'AI Imaging Tool', description:'Reimagine reality. Create, edit, and remix images.', url:'https://app.reve.com', tags:['#AI Tool','#Photo generation','#Design','#Editing'], addedBy:'', date:'', rating:'', notes:'' },
+  { name:'Upsplash', category:'Inspiration', subcategory:'Assets', description:'Free high-resolution photos and illustrations.', url:'https://unsplash.com/', tags:['#Assets','#Images','#Inspiration'], addedBy:'', date:'', rating:'', notes:'' }
+];
+</script>
+</body>
+</html>
